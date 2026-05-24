@@ -254,3 +254,141 @@ Repository
       ↓
 Response Back
 ```
+# Spring Boot Mapping and JSON Notes
+
+In Spring Boot, when we return Java objects from controller methods, Spring automatically converts them into JSON.
+
+Example:
+
+```
+@GetMapping("/user")
+public User getUser(){
+    return new User(1, "Nitin");
+}
+```
+
+Response automatically becomes:
+
+```json
+{
+  "id": 1,
+  "name": "Nitin"
+}
+```
+
+This conversion is handled by:
+
+# Jackson
+
+Jackson converts:
+
+```text
+Java Object ↔ JSON
+```
+
+automatically.
+
+---
+
+# Request Mapping
+
+We can map URLs using:
+
+```
+@RequestMapping
+```
+
+But `@RequestMapping` can handle all HTTP methods:
+
+- GET
+- POST
+- PUT
+- DELETE
+
+So it becomes difficult to understand which request type is being used.
+
+That is why Spring provides:
+
+```
+@GetMapping
+@PostMapping
+@PutMapping
+@DeleteMapping
+```
+
+These are more specific and readable.
+
+---
+
+# GET Mapping
+
+Used mainly for fetching data.
+
+Example:
+
+```
+@GetMapping("/user/{id}")
+public String getUser(@PathVariable int id){
+    return "User ID: " + id;
+}
+```
+
+URL:
+
+```text
+localhost:8080/user/10
+```
+
+Here:
+
+```
+@PathVariable
+```
+
+takes value from URL.
+
+Because GET request mainly sends data through URL.
+
+---
+
+# POST Mapping
+
+Used mainly for sending data to server.
+
+Example:
+
+```
+@PostMapping("/user")
+public User addUser(@RequestBody User user){
+    return user;
+}
+```
+
+Here:
+
+```
+@RequestBody
+```
+
+takes complete JSON body from HTTP request and converts it into Java object.
+
+Example request body:
+
+```json
+{
+  "id": 1,
+  "name": "Nitin"
+}
+```
+
+Spring + Jackson automatically converts JSON → Java Object.
+
+---
+
+# Main Idea
+
+- Jackson handles Java Object ↔ JSON conversion
+- `@GetMapping` used for fetching data
+- `@PostMapping` used for sending data
+- `@PathVariable` gets data from URL
+- `@RequestBody` gets full JSON body from request
